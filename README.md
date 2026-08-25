@@ -44,8 +44,14 @@ Tests mock the transport, so no API key or network is needed.
 
 ## Releasing
 
-Tag `py-v0.1.0` to publish the Python package, `ts-v0.1.0` for the npm package. Both use
-trusted publishing (OIDC) — no tokens in repository secrets. The two version independently.
+Tag `py-v<version>` to publish the Python package, `ts-v<version>` for the npm package.
+The two version independently, and a tag that disagrees with `__version__` or
+`package.json` fails the build rather than publishing a number you can never reuse.
+
+PyPI publishes via trusted publishing (OIDC) — no token in repository secrets. The npm
+job still needs an `NPM_TOKEN` secret, because npm can't pre-configure trusted publishing
+for a package name that doesn't exist yet; switch it over once `@lingolix/sdk` is on the
+registry.
 
 ## Links
 
