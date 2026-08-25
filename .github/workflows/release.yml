@@ -54,6 +54,15 @@ jobs:
           test "$tag" = "$pkg" || { echo "tag $tag != package.json $pkg"; exit 1; }
       - run: npm ci
       - run: npm test
+      # npm answers an unauthenticated or under-privileged publish with a bare
+      # 404 on the PUT, which reads like a missing package. Fail here instead,
+      # where the cause is legible. Neither command echoes the token.
+      - name: Check npm auth
+        run: |
+          test -n "$NODE_AUTH_TOKEN" || { echo "NPM_TOKEN secret is empty or unset"; exit 1; }
+          echo "authenticated as: $(npm whoami)"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: npm publish --provenance --access public
         env:
           # setup-node writes an .npmrc referencing ${NODE_AUTH_TOKEN}; npm expands
