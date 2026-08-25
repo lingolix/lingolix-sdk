@@ -15,7 +15,7 @@ import dataclasses
 import mimetypes
 import os
 from dataclasses import dataclass, field
-from typing import Any, BinaryIO, TypeVar, Union
+from typing import Any, BinaryIO, Literal, TypeVar, Union
 
 import httpx
 
@@ -34,6 +34,7 @@ __all__ = [
     "QuotaExceededError",
     "ServiceUnavailableError",
     "LANGUAGES",
+    "Pitch",
     "MAX_UPLOAD_BYTES",
     "__version__",
 ]
@@ -51,6 +52,9 @@ LANGUAGES = (
 )
 
 AudioInput = Union[str, "os.PathLike[str]", bytes, bytearray, BinaryIO]
+
+#: Relative pitch of a syllable.
+Pitch = Literal["high", "flat", "low", "unknown"]
 
 T = TypeVar("T")
 
@@ -125,7 +129,7 @@ class Syllable:
     detected_ipa: str
     accuracy: float
     completeness: float
-    pitch: str  # "high" | "flat" | "low" | "unknown"
+    pitch: Pitch
     duration_ms: float
     start_ms: float
     end_ms: float
