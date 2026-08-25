@@ -27,7 +27,7 @@ with Lingolix() as client:                       # key from $LINGOLIX_API_KEY
             print(s.text, s.expected_ipa, "→", s.detected_ipa, s.pitch, round(s.accuracy, 2))
 ```
 
-Async is the same class with an `A` on the front:
+Async is the same class with an `Async` prefix:
 
 ```python
 from lingolix import AsyncLingolix
