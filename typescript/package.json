@@ -11,7 +11,14 @@
     "directory": "typescript"
   },
   "bugs": "https://github.com/lingolix/lingolix-sdk/issues",
-  "keywords": ["pronunciation", "speech", "language-learning", "ipa", "phonetics", "lingolix"],
+  "keywords": [
+    "pronunciation",
+    "speech",
+    "language-learning",
+    "ipa",
+    "phonetics",
+    "lingolix"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -23,13 +30,19 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist", "README.md", "LICENSE"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "sideEffects": false,
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --clean",
     "typecheck": "tsc --noEmit",
-    "test": "npm run build && node --test 'test/*.test.mjs'"
+    "test": "npm run build && node --test"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
