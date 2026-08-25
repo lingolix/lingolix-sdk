@@ -58,4 +58,10 @@ jobs:
         env:
           # setup-node writes an .npmrc referencing ${NODE_AUTH_TOKEN}; npm expands
           # it at publish time, so the variable must have exactly this name.
+          #
+          # TEMPORARY: only needed because npm trusted publishing can't be set up
+          # for a package name that doesn't exist yet. Once @lingolix/sdk is on the
+          # registry, configure trusted publishing on its npm settings page, then
+          # delete this env block and the NPM_TOKEN secret. Until then an expired
+          # token fails here as a bare "E401 Unable to authenticate".
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
