@@ -55,3 +55,7 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm publish --provenance --access public
+        env:
+          # setup-node writes an .npmrc referencing ${NODE_AUTH_TOKEN}; npm expands
+          # it at publish time, so the variable must have exactly this name.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
