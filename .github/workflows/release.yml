@@ -19,6 +19,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
+      # A wrong version number can never be un-published from PyPI, so refuse
+      # to build unless the tag and __version__ agree.
+      - name: Check tag matches package version
+        run: |
+          tag="${GITHUB_REF_NAME#py-v}"
+          pkg="$(uv run python -c 'import lingolix; print(lingolix.__version__)')"
+          test "$tag" = "$pkg" || { echo "tag $tag != __version__ $pkg"; exit 1; }
+      - run: uv run pytest -q
       - run: uv build
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
@@ -39,6 +47,11 @@ jobs:
         with:
           node-version: "22"
           registry-url: https://registry.npmjs.org
-      - run: npm install
+      - name: Check tag matches package version
+        run: |
+          tag="${GITHUB_REF_NAME#ts-v}"
+          pkg="$(node -p 'require("./package.json").version')"
+          test "$tag" = "$pkg" || { echo "tag $tag != package.json $pkg"; exit 1; }
+      - run: npm ci
       - run: npm test
       - run: npm publish --provenance --access public
