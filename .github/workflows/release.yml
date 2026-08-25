@@ -1,0 +1,44 @@
+# Tag py-v0.1.0 to publish the Python package, ts-v0.1.0 for the npm package.
+# Both use trusted publishing (OIDC) — no tokens in repository secrets.
+name: Release
+
+on:
+  push:
+    tags: ["py-v*", "ts-v*"]
+
+jobs:
+  pypi:
+    if: startsWith(github.ref, 'refs/tags/py-v')
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+    defaults:
+      run:
+        working-directory: python
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv build
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: python/dist
+
+  npm:
+    if: startsWith(github.ref, 'refs/tags/ts-v')
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+    defaults:
+      run:
+        working-directory: typescript
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: https://registry.npmjs.org
+      - run: npm install
+      - run: npm test
+      - run: npm publish --provenance --access public
