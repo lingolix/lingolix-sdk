@@ -10,7 +10,7 @@
  * ```
  */
 
-export const VERSION = "0.1.0";
+export const VERSION = "0.2.0";
 
 const DEFAULT_BASE_URL = "https://api.lingolix.com";
 const CHECK_PATH = "/api/pronunciation/v3/check";

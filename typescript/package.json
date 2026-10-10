@@ -1,6 +1,6 @@
 {
   "name": "@lingolix/sdk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "TypeScript/JavaScript client for the Lingolix pronunciation scoring API",
   "license": "MIT",
   "author": "Lingolix <info@lingolix.com>",
