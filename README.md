@@ -20,14 +20,14 @@ from lingolix import Lingolix
 
 with Lingolix() as client:
     r = client.check("audio.wav", sentence="Guten Morgen", language="de")
-    print(r.accuracy, [s.text for w in r.words for s in w.syllables])
+    print(r.overall, [s.text for w in r.words for s in w.syllables])
 ```
 
 ```ts
 import { Lingolix } from "@lingolix/sdk";
 
 const r = await new Lingolix().check({ audio, sentence: "Guten Morgen", language: "de" });
-console.log(r.accuracy, r.words.flatMap((w) => w.syllables.map((s) => s.text)));
+console.log(r.overall, r.words.flatMap((w) => w.syllables.map((s) => s.text)));
 ```
 
 Both wrap a single endpoint — `POST /api/pronunciation/v3/check` — with typed results and

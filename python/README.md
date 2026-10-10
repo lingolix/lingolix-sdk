@@ -21,7 +21,7 @@ from lingolix import Lingolix
 with Lingolix() as client:                       # key from $LINGOLIX_API_KEY
     r = client.check("audio.wav", sentence="Guten Morgen", language="de")
 
-    print(r.accuracy, r.completeness, r.speaking_rate)
+    print(r.overall, r.accuracy, r.fluency, r.speaking_rate)
     for word in r.words:
         for s in word.syllables:
             print(s.text, s.expected_ipa, "→", s.detected_ipa, s.pitch, round(s.accuracy, 2))
@@ -44,10 +44,13 @@ transcribed first, then scored against its own transcription — useful for free
 | Field | Meaning |
 | --- | --- |
 | `text` | What the audio was scored against — your `sentence`, or the transcription |
-| `accuracy` | Overall pronunciation accuracy, 0–1 |
+| `overall` | The score to show, 0–1: `accuracy` and `fluency` weighted as human raters weigh them |
+| `accuracy` | How well the sounds were pronounced, 0–1 |
+| `fluency` | Pace and pauses, 0–1; `None`/`null` when the utterance is too short to time (then `overall` = `accuracy`) |
 | `completeness` | How much of the expected utterance was actually said, 0–1 |
-| `speaking_rate` | Syllables per second |
-| `words[]` | `text`, `accuracy`, `completeness`, `start_ms`, `end_ms`, `char_start`, `char_end` |
+| `speaking_rate` | Syllables (Japanese: morae) per second |
+| `target_speaking_rate` | Pace from which `fluency` gets full credit (60% of a typical native pace) |
+| `words[]` | `text`, `accuracy`, `completeness`, `start_ms`, `end_ms`, `char_start`, `char_end`, `hesitation_ms` (pause before or inside the word, else `None`/`null`) |
 | `words[].syllables[]` | `text`, `expected_ipa`, `detected_ipa`, `accuracy`, `completeness`, `pitch`, `duration_ms`, `start_ms`, `end_ms`, `is_missing`, `is_extra` |
 
 `pitch` is one of `"high"`, `"flat"`, `"low"`, `"unknown"`.
