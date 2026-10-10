@@ -19,7 +19,7 @@ from typing import Any, BinaryIO, Literal, TypeVar, Union
 
 import httpx
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "Lingolix",
@@ -149,6 +149,8 @@ class Word:
     end_ms: float
     char_start: int = -1
     char_end: int = -1
+    #: Pause before or inside this word, in ms beyond the speaker's usual gap; None if none.
+    hesitation_ms: float | None = None
 
 
 @dataclass(frozen=True)
@@ -156,14 +158,20 @@ class PronunciationResult:
     """The scored utterance.
 
     ``text`` is the reference the audio was scored against: the ``sentence`` you
-    passed, or the transcription when you passed none.
+    passed, or the transcription when you passed none. ``overall`` is the score to
+    show; ``accuracy`` (the sounds) and ``fluency`` (pace and pauses) explain it.
+    ``fluency`` is None for utterances too short to time; ``overall`` then equals
+    ``accuracy``.
     """
 
     text: str
     speaking_rate: float
     accuracy: float
     completeness: float
+    overall: float
     words: list[Word] = field(default_factory=list)
+    fluency: float | None = None
+    target_speaking_rate: float | None = None
 
 
 def _mk(cls: type[T], data: dict[str, Any]) -> T:
@@ -177,7 +185,9 @@ def _to_result(data: dict[str, Any]) -> PronunciationResult:
         _mk(Word, {**w, "syllables": [_mk(Syllable, s) for s in w.get("syllables", [])]})
         for w in data.get("words", [])
     ]
-    return _mk(PronunciationResult, {**data, "words": words})
+    # An API from before fluency scoring sends no overall: the sounds are all it judged.
+    overall = data.get("overall", data.get("accuracy"))
+    return _mk(PronunciationResult, {**data, "words": words, "overall": overall})
 
 
 # --------------------------------------------------------------------------- clients

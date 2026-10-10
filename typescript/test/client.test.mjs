@@ -110,6 +110,16 @@ test("parses the nested result", async () => {
   assert.equal(r.words[0].syllables[0].pitch, "high");
 });
 
+test("fluency fields pass through; overall falls back to accuracy", async () => {
+  stubFetch(200, { ...OK_BODY, overall: 0.9, fluency: 1.0, target_speaking_rate: 3.0 });
+  const r = await new Lingolix(KEY).check({ audio, sentence: "Guten Morgen", language: "de" });
+  assert.equal(r.overall, 0.9);
+  assert.equal(r.fluency, 1.0);
+  stubFetch(200, OK_BODY);
+  const old = await new Lingolix(KEY).check({ audio, sentence: "Guten Morgen", language: "de" });
+  assert.equal(old.overall, 0.87);
+});
+
 test("429 throws QuotaExceededError with the upgrade URL", async () => {
   stubFetch(429, QUOTA_BODY);
   await assert.rejects(

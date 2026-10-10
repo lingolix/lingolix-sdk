@@ -10,7 +10,7 @@
  * ```
  */
 
-export const VERSION = "0.1.0";
+export const VERSION = "0.2.0";
 
 const DEFAULT_BASE_URL = "https://api.lingolix.com";
 const CHECK_PATH = "/api/pronunciation/v3/check";
@@ -54,17 +54,30 @@ export interface Word {
   end_ms: number;
   char_start: number;
   char_end: number;
+  /** Pause before or inside this word, in ms beyond the speaker's usual gap; null if none. */
+  hesitation_ms?: number | null;
 }
 
 /**
  * The scored utterance. `text` is the reference the audio was scored against:
  * the `sentence` you passed, or the transcription when you passed none.
+ * `overall` is the score to show; `accuracy` (the sounds) and `fluency` (pace
+ * and pauses) explain it. `fluency` is null for utterances too short to time;
+ * `overall` then equals `accuracy`.
  */
 export interface PronunciationResult {
   text: string;
-  speaking_rate: number;
+  /** The headline score, 0-1. */
+  overall: number;
+  /** How well the sounds were pronounced, 0-1. */
   accuracy: number;
+  /** Pace and pauses, 0-1; null when the utterance is too short to time. */
+  fluency?: number | null;
   completeness: number;
+  /** Syllables (Japanese: morae) per second. */
+  speaking_rate: number;
+  /** Pace from which fluency gets full credit, in the same unit. */
+  target_speaking_rate?: number | null;
   words: Word[];
 }
 
@@ -198,7 +211,11 @@ export class Lingolix {
       signal: AbortSignal.timeout(this.timeoutMs),
     });
 
-    if (response.ok) return (await response.json()) as PronunciationResult;
+    if (response.ok) {
+      const r = await response.json();
+      // An API from before fluency scoring sends no overall: the sounds are all it judged.
+      return { ...r, overall: r.overall ?? r.accuracy } as PronunciationResult;
+    }
 
     // FastAPI puts a string in `detail` normally, and an object for the 429 quota payload.
     let detail: unknown;
