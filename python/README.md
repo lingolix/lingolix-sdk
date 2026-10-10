@@ -50,6 +50,7 @@ transcribed first, then scored against its own transcription — useful for free
 | `completeness` | How much of the expected utterance was actually said, 0–1 |
 | `speaking_rate` | Syllables (Japanese: morae) per second |
 | `target_speaking_rate` | Pace from which `fluency` gets full credit (60% of a typical native pace) |
+| `model_version` | Which model and scoring produced the numbers, e.g. `"2026-10"`; changes when an update shifts scores |
 | `words[]` | `text`, `accuracy`, `completeness`, `start_ms`, `end_ms`, `char_start`, `char_end`, `hesitation_ms` (pause before or inside the word, else `None`/`null`) |
 | `words[].syllables[]` | `text`, `expected_ipa`, `detected_ipa`, `accuracy`, `completeness`, `pitch`, `duration_ms`, `start_ms`, `end_ms`, `is_missing`, `is_extra` |
 

@@ -78,6 +78,8 @@ export interface PronunciationResult {
   speaking_rate: number;
   /** Pace from which fluency gets full credit, in the same unit. */
   target_speaking_rate?: number | null;
+  /** Which model and scoring produced the numbers, e.g. "2026-10". */
+  model_version?: string | null;
   words: Word[];
 }
 

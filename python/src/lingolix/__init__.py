@@ -172,6 +172,8 @@ class PronunciationResult:
     words: list[Word] = field(default_factory=list)
     fluency: float | None = None
     target_speaking_rate: float | None = None
+    #: Which model and scoring produced the numbers, e.g. "2026-10"; None from an older API.
+    model_version: str | None = None
 
 
 def _mk(cls: type[T], data: dict[str, Any]) -> T:

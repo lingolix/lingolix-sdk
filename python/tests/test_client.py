@@ -124,12 +124,14 @@ def test_parses_nested_result_and_ignores_unknown_fields():
 
 
 def test_fluency_fields_and_overall_from_an_older_api():
-    new = {**OK_BODY, "overall": 0.9, "fluency": 1.0, "target_speaking_rate": 3.0}
+    new = {**OK_BODY, "overall": 0.9, "fluency": 1.0, "target_speaking_rate": 3.0,
+           "model_version": "2026-10"}  # fmt: skip
     new["words"] = [{**OK_BODY["words"][0], "hesitation_ms": 820.0}]
     with make_client(lambda r: httpx.Response(200, json=new)) as client:
         result = client.check(b"RIFFfake", sentence="Guten Morgen", language="de")
     assert (result.overall, result.fluency, result.target_speaking_rate) == (0.9, 1.0, 3.0)
     assert result.words[0].hesitation_ms == 820.0
+    assert result.model_version == "2026-10"
     with make_client(lambda r: httpx.Response(200, json=OK_BODY)) as client:
         old = client.check(b"RIFFfake", sentence="Guten Morgen", language="de")
     assert (old.overall, old.fluency, old.words[0].hesitation_ms) == (0.87, None, None)
