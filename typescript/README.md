@@ -88,7 +88,7 @@ try {
 
 ## Languages
 
-`bg cs de el en es fi fr hu it ja ko nl pl pt sv uk` — the default is `ja`.
+`bg cs da de el en es fi fr hu it ja ko nb nl pl pt ru sv tr uk` — the default is `ja`.
 
 ## Audio
 
