@@ -2,7 +2,7 @@
 
 Official clients for the [Lingolix](https://lingolix.com) pronunciation scoring API. Send a
 recording, get back per-syllable accuracy with expected vs. detected IPA, pitch and
-timing — in 17 languages.
+timing — in 21 languages.
 
 [![PyPI](https://img.shields.io/pypi/v/lingolix)](https://pypi.org/project/lingolix/)
 [![npm](https://img.shields.io/npm/v/@lingolix/sdk)](https://www.npmjs.com/package/@lingolix/sdk)

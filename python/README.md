@@ -2,7 +2,7 @@
 
 Python client for the [Lingolix](https://lingolix.com) pronunciation scoring API. Send a
 recording, get back per-syllable accuracy with expected vs. detected IPA, pitch and
-timing — in 17 languages.
+timing — in 21 languages.
 
 Get an API key at [lingolix.com/api-portal](https://lingolix.com/api-portal), then set
 `LINGOLIX_API_KEY` in your environment. Keep it server-side — never ship it to a browser.
@@ -50,8 +50,8 @@ transcribed first, then scored against its own transcription — useful for free
 | `completeness` | How much of the expected utterance was actually said, 0–1 |
 | `speaking_rate` | Syllables (Japanese: morae) per second |
 | `target_speaking_rate` | Pace from which `fluency` gets full credit (60% of a typical native pace) |
-| `model_version` | Which model and scoring produced the numbers, e.g. `"2026-10"`; changes when an update shifts scores |
-| `words[]` | `text`, `accuracy`, `completeness`, `start_ms`, `end_ms`, `char_start`, `char_end`, `hesitation_ms` (pause before or inside the word, else `None`/`null`) |
+| `model_version` | Which model and scoring produced the numbers, e.g. `"2026-11"`; changes when an update shifts scores |
+| `words[]` | `text`, `accuracy`, `completeness`, `start_ms`, `end_ms`, `char_start`, `char_end`, `hesitation_ms` (pause before or inside the word, else `None`/`null`), `is_error` (mark the word wrong; same as `accuracy < 0.7`) |
 | `words[].syllables[]` | `text`, `expected_ipa`, `detected_ipa`, `accuracy`, `completeness`, `pitch`, `duration_ms`, `start_ms`, `end_ms`, `is_missing`, `is_extra` |
 
 `pitch` is one of `"high"`, `"flat"`, `"low"`, `"unknown"`.

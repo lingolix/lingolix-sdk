@@ -10,7 +10,7 @@
  * ```
  */
 
-export const VERSION = "0.2.0";
+export const VERSION = "0.3.0";
 
 const DEFAULT_BASE_URL = "https://api.lingolix.com";
 const CHECK_PATH = "/api/pronunciation/v3/check";
@@ -20,8 +20,8 @@ export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 
 /** Languages accepted by the v3 endpoint. */
 export const LANGUAGES = [
-  "bg", "cs", "de", "el", "en", "es", "fi", "fr",
-  "hu", "it", "ja", "ko", "nl", "pl", "pt", "sv", "uk",
+  "bg", "cs", "da", "de", "el", "en", "es", "fi", "fr", "hu", "it",
+  "ja", "ko", "nb", "nl", "pl", "pt", "ru", "sv", "tr", "uk",
 ] as const;
 
 export type Language = (typeof LANGUAGES)[number];
@@ -56,6 +56,11 @@ export interface Word {
   char_end: number;
   /** Pause before or inside this word, in ms beyond the speaker's usual gap; null if none. */
   hesitation_ms?: number | null;
+  /**
+   * True when the word was mispronounced or skipped: mark it wrong. Errors have
+   * accuracy below 0.7, accepted words 0.7 or above. Absent before model 2026-11.
+   */
+  is_error?: boolean;
 }
 
 /**
@@ -78,7 +83,7 @@ export interface PronunciationResult {
   speaking_rate: number;
   /** Pace from which fluency gets full credit, in the same unit. */
   target_speaking_rate?: number | null;
-  /** Which model and scoring produced the numbers, e.g. "2026-10". */
+  /** Which model and scoring produced the numbers, e.g. "2026-11". */
   model_version?: string | null;
   words: Word[];
 }

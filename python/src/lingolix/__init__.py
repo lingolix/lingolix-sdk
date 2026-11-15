@@ -19,7 +19,7 @@ from typing import Any, BinaryIO, Literal, TypeVar, Union
 
 import httpx
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 __all__ = [
     "Lingolix",
@@ -47,8 +47,8 @@ MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 
 #: Languages accepted by the v3 endpoint.
 LANGUAGES = (
-    "bg", "cs", "de", "el", "en", "es", "fi", "fr",
-    "hu", "it", "ja", "ko", "nl", "pl", "pt", "sv", "uk",
+    "bg", "cs", "da", "de", "el", "en", "es", "fi", "fr", "hu", "it",
+    "ja", "ko", "nb", "nl", "pl", "pt", "ru", "sv", "tr", "uk",
 )
 
 AudioInput = Union[str, "os.PathLike[str]", bytes, bytearray, BinaryIO]
@@ -151,6 +151,9 @@ class Word:
     char_end: int = -1
     #: Pause before or inside this word, in ms beyond the speaker's usual gap; None if none.
     hesitation_ms: float | None = None
+    #: True when the word was mispronounced or skipped: mark it wrong. Errors have accuracy
+    #: below 0.7, accepted words 0.7 or above. None from an API before model 2026-11.
+    is_error: bool | None = None
 
 
 @dataclass(frozen=True)
@@ -172,7 +175,7 @@ class PronunciationResult:
     words: list[Word] = field(default_factory=list)
     fluency: float | None = None
     target_speaking_rate: float | None = None
-    #: Which model and scoring produced the numbers, e.g. "2026-10"; None from an older API.
+    #: Which model and scoring produced the numbers, e.g. "2026-11"; None from an older API.
     model_version: str | None = None
 
 
